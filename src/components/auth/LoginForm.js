@@ -4,10 +4,14 @@ import { useRouter } from 'next/router';
 
 const LoginForm = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
+    const [errors, setErrors] = useState([]);
     const router = useRouter();
     const { email, password } = formData;
 
-    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const onChange = e => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setErrors([]); // Clear errors when user starts typing
+    };
 
     const onSubmit = async e => {
         e.preventDefault();
@@ -16,12 +20,16 @@ const LoginForm = () => {
             console.log(res.data);
             router.push('/'); // Redirect to home page or dashboard on successful login
         } catch (err) {
-            console.error(err.response.data); // Handle errors
+            setErrors(err.response.data.errors || [{ msg: 'An error occurred' }]);
         }
     };
 
     return (
         <form onSubmit={onSubmit} className="space-y-4">
+            {/* Display Errors */}
+            {errors.map((error, index) => (
+                <div key={index} className="text-red-600">{error.msg}</div>
+            ))}
             <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                 <input type="email" name="email" id="email" value={email} onChange={onChange} required className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" />

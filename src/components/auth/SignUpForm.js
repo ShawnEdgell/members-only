@@ -9,25 +9,30 @@ const SignUpForm = () => {
         password: '',
         password2: ''
     });
+    const [errors, setErrors] = useState([]);
     const router = useRouter();
     const { fullName, email, password, password2 } = formData;
 
-    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const onChange = e => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setErrors([]); // Clear errors when user starts typing
+    };
 
     const onSubmit = async e => {
         e.preventDefault();
         if (password !== password2) {
-            console.error('Passwords do not match');
-            return; // Add better error handling
+            setErrors([{ msg: 'Passwords do not match' }]);
+            return;
         }
         try {
-            const res = await axios.post('/api/users/register', { fullName, email, password });
+            const res = await axios.post('/api/users/register', formData);
             console.log(res.data);
             router.push('/login'); // Redirect to login page on successful sign up
         } catch (err) {
-            console.error(err.response.data); // Handle errors
+            setErrors(err.response.data.errors || [{ msg: 'An error occurred' }]);
         }
     };
+    
 
     return (
         <form onSubmit={onSubmit} className="space-y-4">
