@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/router';
 
-const LoginForm = () => {
+const LoginForm = ({ onSuccessfulLogin }) => {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [errors, setErrors] = useState([]);
-    const router = useRouter();
     const { email, password } = formData;
 
     const onChange = e => {
@@ -18,7 +16,7 @@ const LoginForm = () => {
         try {
             const res = await axios.post('/api/users/login', formData);
             console.log(res.data);
-            router.push('/'); // Redirect to home page or dashboard on successful login
+            if (onSuccessfulLogin) onSuccessfulLogin(); // Call the provided callback on successful login
         } catch (err) {
             setErrors(err.response.data.errors || [{ msg: 'An error occurred' }]);
         }
@@ -26,7 +24,6 @@ const LoginForm = () => {
 
     return (
         <form onSubmit={onSubmit} className="space-y-4">
-            {/* Display Errors */}
             {errors.map((error, index) => (
                 <div key={index} className="text-red-600">{error.msg}</div>
             ))}
