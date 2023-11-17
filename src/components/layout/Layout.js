@@ -1,5 +1,6 @@
 // components/layout/Layout.js
 import React, { useState } from 'react';
+import axios from 'axios'; // Import axios here
 import Header from './Header';
 import Footer from './Footer';
 import Modal from './Modal';
@@ -13,18 +14,18 @@ const Layout = ({ children }) => {
 
     const handleSuccessfulSignup = () => {
         setShowSignUpModal(false);
-        setShowLoginForm(true); // Open the login modal after successful signup
+        setShowLoginForm(true);
     };
 
     const handleSuccessfulLogin = () => {
         setShowLoginForm(false);
-        setIsLoggedIn(true); // User is now logged in
+        setIsLoggedIn(true);
     };
 
     const handleLogout = async () => {
         try {
             await axios.post('/api/users/logout');
-            setIsLoggedIn(false); // User is now logged out
+            setIsLoggedIn(false);
         } catch (error) {
             console.error('Logout failed:', error);
         }
