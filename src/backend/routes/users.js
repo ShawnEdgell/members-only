@@ -61,11 +61,22 @@ router.post('/register', (req, res) => {
 
 // Login Handle
 router.post('/login', (req, res, next) => {
-  passport.authenticate('local', {
-    successRedirect: '/', // Redirect path after successful login
-    failureRedirect: '/users/login', // Redirect path if login fails
-    failureFlash: true
-  })(req, res, next);
-});
+    passport.authenticate('local', (err, user, info) => {
+      if (err) {
+        return res.status(500).json({ message: err.message });
+      }
+      if (!user) {
+        return res.status(401).json({ message: info.message });
+      }
+      req.logIn(user, err => {
+        if (err) {
+          return res.status(500).json({ message: err.message });
+        }
+        // You can adjust the response as per your requirement
+        return res.status(200).json({ message: 'Logged in successfully', user });
+      });
+    })(req, res, next); // Ensure this line is correctly placed
+  });
+  
 
 module.exports = router;

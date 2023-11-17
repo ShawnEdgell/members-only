@@ -17,4 +17,7 @@ const UserSchema = new mongoose.Schema({
   // Additional fields like isAdmin, membershipStatus, etc.
 });
 
-module.exports = mongoose.model('User', UserSchema);
+// Create the User model and specify the collection name
+const User = mongoose.model('User', UserSchema, 'users');
+
+module.exports = User;
