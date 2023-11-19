@@ -1,4 +1,4 @@
-import { withAuth } from '../../utils/withAuth'; // Ensure you have this utility for authentication check
+import { withAuth } from '../../../utils/withAuth'; // Ensure you have this utility for authentication check
 
 const handler = async (req, res) => {
     if (req.method === 'GET') {

@@ -6,7 +6,7 @@ export default function Profile() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('/api/users/me')
+        axios.get('/api/users/me', { withCredentials: true }) // Include credentials in the request
             .then(response => {
                 setUser(response.data);
                 setLoading(false);

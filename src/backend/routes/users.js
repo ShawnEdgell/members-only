@@ -59,6 +59,26 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// Update User Profile
+router.post('/update', (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: 'Not authenticated' });
+    }
+
+    const { fullName, email } = req.body;
+
+    // Basic validation
+    if (!fullName || !email) {
+        return res.status(400).json({ message: 'Full name and email are required' });
+    }
+
+    User.findOneAndUpdate({ _id: req.user.id }, { fullName, email }, { new: true })
+        .then(user => {
+            res.status(200).json({ message: 'Profile updated successfully', user });
+        })
+        .catch(err => res.status(500).json({ message: 'Error updating profile', error: err }));
+});
+
 // Login Handle
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
